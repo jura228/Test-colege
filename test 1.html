@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест на спеціальність</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bold:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align:center;
+            min-height: 0vh;
+            margin: 0;
+            padding: 30px;
+            font: normal normal normal 15px/1.4 Bold;
+            background-color: #000080;
+            color : white;
+        }
+        .instruction {
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgb(255, 255, 255);
+            background: rgb(255, 255, 255);
+            text-align: center;
+            color : black;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn-yes { background-color: #4CAF50; color: white; }
+        .btn-no { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+    <div class="instruction">
+        <h1>Бажаєте дізнатися, які спеціальності ВСП "ЛФКХПП НУХТ" найбільше підходять саме Вам?</h1>
+        <p>Пройдіть невеличке анкетування й одразу отримайте відповідь.</p>
+        <h2>Інструкція</h2>
+        <p>Уважно прочитайте кожне запитання, якщо Ви згодні з твердженням, відзначайте відповідь «ТАК», якщо не погоджуєтесь, відзначайте «НІ». Намагайтеся відповідати якомога правдивіше. Пам’ятайте, що дана анкета не містить «хороших» або «поганих» відповідей.</p>
+    </div>
+
+    <div class="container" id="app">
+        <h2 id="question">Розпочати тест</h2>
+        <button onclick="startTest()" class="btn-yes">Розпочати тест</button>
+    </div>
+
+    <script>
+        const questions = [
+            // Маркетинг
+            { text: "Чи подобається вам створювати цікаві ідеї та концепції для просування товарів чи послуг?", field: "marketing" },
+            { text: "Чи любите ви спілкуватися з різними людьми та вести переговори?", field: "marketing" },
+            { text: "Чи цікаво вам дізнатись як працює ринок?", field: "marketing" },
+            { text: "Ви креативна особистість і вам подобається придумувати нові рішення?", field: "marketing" },
+            { text: "Чи цікавить вас ведення соціальних мереж та створення контенту?", field: "marketing" },
+
+            // Диджитал облік і оподаткування
+            { text: "Чи легко вам дається робота з числами та фінансовими розрахунками?", field: "digital_accounting" },
+            { text: "Чи уважні ви до деталей та чи любите точність у роботі?", field: "digital_accounting" },
+            { text: "Чи цікава вам робота з таблицями, числами та розрахунками?", field: "digital_accounting" },
+            { text: "Чи цікаво вам дізнатись про сучасні технології у сфері бухгалтерії та фінансів?", field: "digital_accounting" },
+            { text: "Чи цікава вам робота з фінансами?", field: "digital_accounting" },
+            { text: "Чи легко ви опановуєте роботу з комп’ютерними програмами?", field: "digital_accounting" },
+            { text: "Чи подобається вам систематизувати інформацію?", field: "digital_accounting" },
+
+            // Виробництво харчової продукції
+            { text: "Чи подобається вам готувати та експериментувати з рецептами?", field: "food_production" },
+            { text: "Чи цікавитесь ви технологіями приготування їжі?", field: "food_production" },
+            { text: "Чи цікаво вам, як створюються продукти харчування у промислових масштабах?", field: "food_production" },
+            { text: "Чи цікаво вам дізнатись які технології використовують для збереження свіжості продуктів?", field: "food_production" },
+            { text: "Вам було б цікаво працювати в лабораторії або на виробництві?", field: "food_production" },
+
+            // Виробництво хліба, кондитерських, макаронних виробів і харчових концентратів
+            { text: "Чи цікавий вам процес випікання хліба, тістечок або виготовлення макаронів?", field: "bakery_production" },
+            { text: "Чи хотіли б ви знати усі тонкощі створення смачної випічки?", field: "bakery_production" },
+            { text: "Чи подобається вам працювати з тістом та різними видами борошна?", field: "bakery_production" },
+            { text: "Чи хотіли б ви працювати у кондитерському або пекарському виробництві?", field: "bakery_production" },
+            { text: "Чи любите ви дотримуватися чітких інструкцій?", field: "bakery_production" },
+            { text: "Чи цікаво вам як виробляються макаронні, кондитерські вироби у великих масштабах?", field: "bakery_production" },
+
+            // Технології харчових продуктів, напоїв, мінеральних та питних вод
+            { text: "Чи цікаво вам дізнатись як виробляють різні напої (соки, чай, кава, вина і тд)?", field: "beverage_technology" },
+            { text: "Чи хотіли б ви слідкувати за якістю виробництва напоїв?", field: "beverage_technology" },
+            { text: "Чи цікаво вам проводити експерименти з різними напоями?", field: "beverage_technology" },
+            { text: "Вам цікаво як технології впливають на смак та якість напоїв?", field: "beverage_technology" },
+            { text: "Чи цікаво вам працювати з хімічними процесами та експериментувати?", field: "beverage_technology" },
+            { text: "Чи цікаво вам, як створюються нові види напоїв?", field: "beverage_technology" },
+
+            // Готельно-ресторанна справа
+            { text: "Чи подобається вам організовувати заходи?", field: "hospitality" },
+            { text: "Чи хотіли б ви працювати у сфері туризму або у готельно-ресторанному бізнесі?", field: "hospitality" },
+            { text: "Чи подобається вам приймати гостей та створювати комфортні умови?", field: "hospitality" },
+            { text: "Чи цікаво вам розбиратись у культурі споживання їжі та напоїв?", field: "hospitality" },
+            { text: "Вам цікава сфера обслуговування та сервісу?", field: "hospitality" },
+            { text: "Вам подобається керувати людьми та контролювати якість роботи?", field: "hospitality" },
+
+            // Інжиніринг обладнання харчових виробництв
+            { text: "Чи подобається вам конструювати або розбиратися в роботі технічних пристроїв?", field: "food_engineering" },
+            { text: "Чи маєте ви схильність до точних наук, таких як фізика та математика?", field: "food_engineering" },
+            { text: "Чи хотіли б ви працювати з автоматизованими виробничими процесами?", field: "food_engineering" },
+            { text: "Чи подобається вам точність, креслення та розрахунок?", field: "food_engineering" },
+            { text: "Чи хотіли б ви створювати обладнання на заводах?", field: "food_engineering" },
+            { text: "Чи цікаво вам, як працюють технологічні процеси у харчовій промисловості?", field: "food_engineering" },
+            { text: "Чи подобається вам вирішувати технічні проблеми та знаходити оптимальні рішення?", field: "food_engineering" },
+            { text: "Ви віддаєте перевагу роботі з механізмами, ніж з людьми?", field: "food_engineering" },
+
+            // Комп'ютерні науки
+            { text: "Чи цікаво вам програмування та створення компʼютерних програм?", field: "computer_science" },
+            { text: "Чи хотіли б ви працювати у сфері ІТ та розробки сайтів?", field: "computer_science" },
+            { text: "Чи подобається вам логічне мислення та розвʼязання завдань?", field: "computer_science" },
+            { text: "Чи цікаво вам дізнатись більше про штучний інтелект?", field: "computer_science" },
+            { text: "Чи любите ви розв’язувати логічні завдання та створювати алгоритми?", field: "computer_science" },
+        ];
+
+        const results = {
+            marketing: 0,
+            digital_accounting: 0,
+            food_production: 0,
+            bakery_production: 0,
+            beverage_technology: 0,
+            hospitality: 0,
+            food_engineering: 0,
+            computer_science: 0,
+        };
+
+        let currentQuestion = 0;
+        
+        function shuffleQuestions() {
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+        }
+
+        function startTest() {
+            shuffleQuestions();
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestion < questions.length) {
+                document.getElementById('app').innerHTML = 
+                    `<h2>${questions[currentQuestion].text}</h2>
+                    <button class="btn-yes" onclick="answer('yes')">Так</button>
+                    <button class="btn-no" onclick="answer('no')">Ні</button>`;
+            } else {
+                showResults();
+            }
+        }
+
+        function answer(response) {
+            if (response === 'yes') {
+                results[questions[currentQuestion].field]++;
+            }
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function showResults() {
+            const resultsArray = Object.keys(results).map(field => ({
+                field: field,
+                score: results[field]
+            }));
+
+            resultsArray.sort((a, b) => b.score - a.score);
+
+            const topFields = resultsArray.slice(0, 3);
+
+            const specialties = {
+                marketing: "Маркетинг",
+                digital_accounting: "Диджитал облік і оподаткування",
+                food_production: "Виробництво харчової продукції",
+                bakery_production: "Виробництво хліба, кондитерських, макаронних виробів і харчових концентратів",
+                beverage_technology: "Технології харчових продуктів, напоїв, мінеральних та питних вод",
+                hospitality: "Готельно-ресторанна справа",
+                food_engineering: "Інжиніринг обладнання харчових виробництв",
+                computer_science: "Комп'ютерні науки"
+            };
+
+            let recommendedSpecialties = "";
+            topFields.forEach((item, index) => {
+                recommendedSpecialties += `${index + 1}. ${specialties[item.field]}<br>`;
+            });
+
+            document.getElementById('app').innerHTML = 
+                `<h2>Ваші рекомендовані спеціальності:</h2>
+                <p>${recommendedSpecialties}</p>`;
+        }
+    </script>
+</body>
+</html>
